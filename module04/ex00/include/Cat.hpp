@@ -1,0 +1,30 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Cat.hpp                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/08/11 20:43:50 by bjacobs           #+#    #+#             */
+/*   Updated: 2023/08/12 00:35:03 by bjacobs          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef CAT_HPP
+# define CAT_HPP
+
+#include "Animal.hpp"
+
+class Cat : public Animal {
+
+	public:
+		Cat(void);
+		Cat(const Cat& source);
+		~Cat(void);
+
+		Cat&			operator=(const Cat& rightSide);
+
+		virtual void	makeSound(void) const;
+};
+
+#endif // !CAT_HPP
