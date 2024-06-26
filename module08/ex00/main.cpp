@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 05:56:09 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/06/24 21:03:02 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/06/26 17:48:56 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	useEasyFind(Container& cont, const T& target) {
 
 	std::cout << "searching " << target << " in container ";
 	printContainer<Container>(cont);
+	std::cout << std::endl;
 	if (easyFind<Container>(cont, static_cast<int>(target)) != cont.end()) {
 
 		std::cout << target << " was found in container ";
