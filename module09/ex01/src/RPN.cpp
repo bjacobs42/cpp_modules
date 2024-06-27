@@ -6,13 +6,13 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 02:37:45 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/03/23 06:23:50 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/06/27 20:55:50 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RPN.hpp"
+#include <cstdint>
 #include <cstring>
-#include <iostream>
 #include <limits>
 
 RPN::RPN(void) {}
@@ -25,26 +25,21 @@ RPN&	RPN::operator=(const RPN& rightSide) {
 	return (*this);
 }
 
-bool	RPN::addNumber(const std::string& number, std::size_t& i) {
+size_t	RPN::addNumber(const std::string& number) {
 	uint8_t	dots = 0;
-	std::size_t start = i;
+	size_t	i;
 
-	while (number[i]) {
-		if (number[i] == '.') {
-			if (++dots > 1 || !number[i+1])
-				return (false);
-		}
-		else if (!std::isdigit(number[i]))
+	for (i = 0;  number[i]; ++i) {
+		if (std::isdigit(number[i]))
+			continue;
+		if (number[i] != '.')
 			break;
-		++i;
+		++dots;
+		if (dots > 1 || !number[i+1])
+			return (false);
 	}
-	try {
-		_stack.push(std::stod(&number[start]));
-	}
-	catch (std::out_of_range& e) {
-		return (false);
-	}
-	return (true);
+	_stack.push(std::stod(number));
+	return (i);
 }
 
 static double	returnPop(std::stack<double>& cont) {
@@ -53,18 +48,16 @@ static double	returnPop(std::stack<double>& cont) {
 	return (ret);
 }
 
-bool	RPN::executeOperation(const char& op) {
+void	RPN::executeOperation(const char& op) {
 	if (_stack.size() < 2)
-		return (false);
+		throw std::exception();
 	switch (op) {
 		case '+':
 			_stack.top() += returnPop(_stack);
 			break;
-
 		case '-':
 			_stack.top() -= returnPop(_stack);
 			break;
-
 		case '/':
 			if (_stack.top() == 0) {
 				_stack.pop();
@@ -73,35 +66,34 @@ bool	RPN::executeOperation(const char& op) {
 			else
 				_stack.top() /= returnPop(_stack);
 			break;
-
 		case '*':
 			_stack.top() *= returnPop(_stack);
 			break;
 	}
-	return (true);
 }
 
-bool	RPN::processArguments(const std::string& arg) {
-	std::size_t			i;
+void	RPN::processArguments(const std::string& arg) {
+	size_t	i;
+	size_t	nread;
 
 	i = 0;
 	while (arg[i]) {
-		if (!std::isspace(arg[i])) {
-			if (std::isdigit(arg[i]) || arg[i] == '.') {
-				if (!this->addNumber(arg, i)) {
-					std::cout << "Error: invalid :c" << std::endl;
-					return (false);
-				}
-				continue;
-			}
-			if (!std::strchr("+-/*", arg[i]) || !this->executeOperation(arg[i])) {
-				std::cout << "Error: invalid :c" << std::endl;
-				return (false);
-			}
+		if (std::isspace(arg[i])) {
+			++i;
+			continue;
 		}
-		++i;
+		if (std::isdigit(arg[i]) || arg[i] == '.') {
+			nread = this->addNumber(&arg[i]);
+			i += nread;
+			continue;
+		}
+		if (std::strchr("+-/*", arg[i])) {
+			this->executeOperation(arg[i]);
+			++i;
+			continue;
+		}
+		throw std::exception();
 	}
-	return (true);
 }
 
 double	RPN::getResult(void) const {

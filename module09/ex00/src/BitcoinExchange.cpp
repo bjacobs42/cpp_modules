@@ -6,22 +6,22 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 23:45:17 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/03/28 00:26:13 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/06/27 21:29:13 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/BitcoinExchange.hpp"
 #include <fstream>
 #include <iostream>
-#include <stdexcept>
+#include <cstdint>
 
-/****************************** [ Uility Functons ] ******************************/
+/****************************** [ Uility Functions ] ******************************/
 
 static char	getSeparator(const std::string& buff)
 {
 	char	separator;
+	size_t	i;
 
-	std::size_t	i;
 	i = buff.find("date");
 	if (i == std::string::npos)
 		return (-1);
@@ -41,14 +41,16 @@ static char	getSeparator(const std::string& buff)
 static bool	separateFormat(const std::string& buff, std::string& date,
 		float& value, const char separator, const unsigned int& lineIndex)
 {
-	std::size_t	found = buff.find(separator);
+	size_t	found;
+	int		i;
 
+	found = buff.find(separator);
 	if (found == std::string::npos)
 	{
 		std::cout << "Error: invalid format at line " << lineIndex << std::endl;
 		return (false);
 	}
-	int	i = 0;
+	i = 0;
 	while (std::isspace(date[i]))
 		++i;
 	date = buff.substr(i, found);
@@ -74,7 +76,8 @@ static bool	validDate(const std::string& string)
 	{
 		if (string[i] == '-')
 		{
-			if (++dashCount > 2)
+			++dashCount;
+			if (dashCount > 2)
 				return (false);
 		}
 		else if (!std::isdigit(string[i]))
@@ -151,7 +154,7 @@ static void	insertData(std::map<std::string, float>& dataBase,
 	dataBase[date] = value;
 }
 
-/****************************** [ Member Functons ] ******************************/
+/****************************** [ Member Functoins ] ******************************/
 
 BitcoinExchange::BitcoinExchange(void)
 {

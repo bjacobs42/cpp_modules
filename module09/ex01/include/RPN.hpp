@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 02:28:51 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/03/23 05:41:21 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/06/27 20:31:22 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ class RPN {
 
 		RPN&		operator=(const RPN& rightSide);
 
-		bool		addNumber(const std::string& number, std::size_t& i);
-		bool		executeOperation(const char& op);
-		bool		processArguments(const std::string& args);
+		size_t		addNumber(const std::string& number);
+		void		executeOperation(const char& op);
+		void		processArguments(const std::string& args);
 
 		double		getResult(void) const;
 };
