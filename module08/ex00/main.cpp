@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 05:56:09 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/06/26 17:48:56 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/05 18:59:39 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,39 +15,43 @@
 #include <vector>
 #include <iostream>
 
-template <typename Container>
-void	printContainer(Container& cont) {
+template <typename Container, typename T>
+void	printContainer(Container& cont)
+{
+	bool	first;
 
-	typename Container::iterator	it;
-	typename Container::iterator	ite;
-
-	if (cont.empty()) {
-
+	if (cont.empty())
+	{
 		std::cout << "{ }";
 		return;
 	}
-	ite = cont.end();
 	std::cout << "{ ";
-	for (it = cont.begin(); it+1 != ite; ++it)
-		std::cout << *it << ", ";
-	std::cout << *it << " }";
+	first = true;
+	for (const T val: cont)
+	{
+		if (!first)
+			std::cout << ", ";
+		std::cout << val;
+		first = false;
+	}
+	std::cout << " }";
 };
 
 template <typename Container, typename T>
-void	useEasyFind(Container& cont, const T& target) {
-
+void	useEasyFind(Container& cont, const T& target)
+{
 	std::cout << "searching " << target << " in container ";
-	printContainer<Container>(cont);
+	printContainer<Container, T>(cont);
 	std::cout << std::endl;
-	if (easyFind<Container>(cont, static_cast<int>(target)) != cont.end()) {
-
+	if (easyFind<Container>(cont, static_cast<int>(target)) != cont.end())
+	{
 		std::cout << target << " was found in container ";
-		printContainer<Container>(cont);
+		printContainer<Container, T>(cont);
 	}
-	else {
-
+	else
+	{
 		std::cout << target << " was not found in container ";
-		printContainer<Container>(cont);
+		printContainer<Container, T>(cont);
 	}
 	std::cout << std::endl << std::endl;
 }
