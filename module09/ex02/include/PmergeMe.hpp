@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 23:32:56 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/03/28 00:21:39 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/06 23:25:22 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 #include <vector>
 #include <iostream>
 
-class PmergeMe {
+class PmergeMe
+{
 	private:
 		PmergeMe(void);
 		PmergeMe(const PmergeMe& source);
@@ -27,24 +28,31 @@ class PmergeMe {
 	public:
 
 		template <typename Cont>
-		static bool	initCont(char** args, Cont& container) {
-			for (std::size_t i = 0; args[i]; ++i) {
-				for (std::size_t j = 0; args[i][j]; ++j) {
+		static bool	initCont(char** args, Cont& container)
+		{
+			for (std::size_t i = 0; args[i]; ++i)
+			{
+				for (std::size_t j = 0; args[i][j]; ++j)
+				{
 					if (std::isspace(args[i][j]))
 						continue;
-					try {
+					try
+					{
 						container.push_back(std::stoi(&args[i][j]));
 					}
-					catch (const std::exception& e) {
+					catch (const std::exception& e)
+					{
 						std::cout << "Error" <<  std::endl;
 						return (false);
 					}
-					while (std::isdigit(args[i][j]) && args[i][j+1]) {
+					while (std::isdigit(args[i][j]) && args[i][j+1])
+					{
 						++j;
 					}
 				}
 			}
-			if (container.empty()) {
+			if (container.empty())
+			{
 				std::cout << "Error" <<  std::endl;
 				return (false);
 			}

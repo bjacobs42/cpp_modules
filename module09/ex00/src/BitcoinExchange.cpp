@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 23:45:17 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/06/27 21:29:13 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/06 23:06:33 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,8 @@ static char	getSeparator(const std::string& buff)
 		++i;
 	if (!buff[i])
 		return (-1);
-	separator = buff[i++];
-	while (std::isspace(buff[i]))
-		++i;
-	if (!buff[i])
+	separator = buff[i];
+	if (std::isspace(*(buff.end()-1)) || *(buff.end()-1) == separator)
 		return (-1);
 	return (separator);
 }
@@ -207,13 +205,13 @@ void	BitcoinExchange::readInput(const std::string& inputFile)
 	float									value;
 	char									separator;
 
-	if (_dataBase.empty())
-		return;
 	if (!input)
 	{
 		std::cout << "Error: invalid input file" << std::endl;
 		return;
 	}
+	if (_dataBase.empty())
+		return;
 	std::getline(input, buff);
 	separator = getSeparator(buff);
 	if (separator == -1)

@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 02:37:45 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/06/27 20:55:50 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/06 23:15:44 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,26 @@
 #include <cstring>
 #include <limits>
 
-RPN::RPN(void) {}
-RPN::RPN(const RPN& source) { *this = source; }
-RPN::~RPN(void) {}
+RPN::RPN(void)
+{}
 
-RPN&	RPN::operator=(const RPN& rightSide) {
+RPN::RPN(const RPN& source)
+{
+	*this = source;
+}
+
+RPN::~RPN(void)
+{}
+
+RPN&	RPN::operator=(const RPN& rightSide)
+{
 	if (this != &rightSide)
 		_stack = rightSide._stack;
 	return (*this);
 }
 
-size_t	RPN::addNumber(const std::string& number) {
+size_t	RPN::addNumber(const std::string& number)
+{
 	uint8_t	dots = 0;
 	size_t	i;
 
@@ -42,13 +51,15 @@ size_t	RPN::addNumber(const std::string& number) {
 	return (i);
 }
 
-static double	returnPop(std::stack<double>& cont) {
+static double	returnPop(std::stack<double>& cont)
+{
 	double	ret = cont.top();
 	cont.pop();
 	return (ret);
 }
 
-void	RPN::executeOperation(const char& op) {
+void	RPN::executeOperation(const char& op)
+{
 	if (_stack.size() < 2)
 		throw std::exception();
 	switch (op) {
@@ -72,7 +83,8 @@ void	RPN::executeOperation(const char& op) {
 	}
 }
 
-void	RPN::processArguments(const std::string& arg) {
+void	RPN::processArguments(const std::string& arg)
+{
 	size_t	i;
 	size_t	nread;
 
@@ -96,7 +108,8 @@ void	RPN::processArguments(const std::string& arg) {
 	}
 }
 
-double	RPN::getResult(void) const {
+double	RPN::getResult(void) const
+{
 	if (_stack.size() != 1)
 		throw std::exception();
 	return (_stack.top());

@@ -6,17 +6,23 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 23:43:38 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/03/28 00:21:45 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/06 23:18:26 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 
-PmergeMe::PmergeMe(void) {}
-PmergeMe::PmergeMe(const PmergeMe& source) { *this = source; }
-PmergeMe::~PmergeMe(void) {}
+PmergeMe::PmergeMe(void)
+{}
+PmergeMe::PmergeMe(const PmergeMe& source)
+{
+	*this = source;
+}
+PmergeMe::~PmergeMe(void)
+{}
 
-PmergeMe&	PmergeMe::operator=(const PmergeMe& rightSide) {
+PmergeMe&	PmergeMe::operator=(const PmergeMe& rightSide)
+{
 	if (this != &rightSide)
 		return (*this);
 	return (*this);
@@ -24,28 +30,34 @@ PmergeMe&	PmergeMe::operator=(const PmergeMe& rightSide) {
 
 static void	merge(std::vector<unsigned int>& leftVector,
 		std::vector<unsigned int>& rightVector, 
-		std::vector<unsigned int>& origin) {
+		std::vector<unsigned int>& origin)
+{
 	unsigned int	leftSize = leftVector.size();
 	unsigned int	rightSize = rightVector.size();
 	unsigned int	i = 0, leftIndex = 0, rightIndex = 0;
 
-	while (leftIndex < leftSize && rightIndex < rightSize) {
-		if (leftVector[leftIndex] <= rightVector[rightIndex]) {
+	while (leftIndex < leftSize && rightIndex < rightSize)
+	{
+		if (leftVector[leftIndex] <= rightVector[rightIndex])
+		{
 			origin[i] = leftVector[leftIndex];
 			++leftIndex;
 		}
-		else {
+		else
+		{
 			origin[i] = rightVector[rightIndex];
 			++rightIndex;
 		}
 		++i;
 	}
-	while (leftIndex < leftSize) {
+	while (leftIndex < leftSize)
+	{
 		origin[i] = leftVector[leftIndex];
 		++leftIndex;
 		++i;
 	}
-	while (rightIndex < rightSize) {
+	while (rightIndex < rightSize)
+	{
 		origin[i] = rightVector[rightIndex];
 		++rightIndex;
 		++i;
@@ -54,7 +66,8 @@ static void	merge(std::vector<unsigned int>& leftVector,
 
 static void	merge(std::list<unsigned int>& leftList,
 		std::list<unsigned int>& rightList, 
-		std::list<unsigned int>& origin) {
+		std::list<unsigned int>& origin)
+{
 	std::list<unsigned int>::iterator	leftIt, leftIte;
 	std::list<unsigned int>::iterator	rightIt, rightIte;
 	std::list<unsigned int>::iterator	originIt;
@@ -64,30 +77,36 @@ static void	merge(std::list<unsigned int>& leftList,
 	leftIte = leftList.end();
 	rightIt = rightList.begin(); 
 	rightIte = rightList.end();
-	while (leftIt != leftIte && rightIt != rightIte) {
-		if (*leftIt <= *rightIt) {
+	while (leftIt != leftIte && rightIt != rightIte)
+	{
+		if (*leftIt <= *rightIt)
+		{
 			*originIt = *leftIt;
 			++leftIt;
 		}
-		else {
+		else
+		{
 			*originIt = *rightIt;
 			++rightIt;
 		}
 		++originIt;
 	}
-	while (leftIt != leftIte) {
+	while (leftIt != leftIte)
+	{
 		*originIt = *leftIt;
 		++leftIt;
 		++originIt;
 	}
-	while (rightIt != rightIte) {
+	while (rightIt != rightIte)
+	{
 		*originIt = *rightIt;
 		++rightIt;
 		++originIt;
 	}
 }
 
-void	PmergeMe::mergeSort(std::vector<unsigned int>& vector) {
+void	PmergeMe::mergeSort(std::vector<unsigned int>& vector)
+{
 	if (vector.size() < 2) return;
 
 	unsigned int				middle = vector.size() / 2;
@@ -104,7 +123,8 @@ void	PmergeMe::mergeSort(std::vector<unsigned int>& vector) {
 	merge(leftVector, rightVector, vector);
 }
 
-void	PmergeMe::mergeSort(std::list<unsigned int>& list) {
+void	PmergeMe::mergeSort(std::list<unsigned int>& list)
+{
 	if (list.size() < 2) return;
 
 	unsigned int						middle = list.size() / 2;

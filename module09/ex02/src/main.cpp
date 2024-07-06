@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 23:26:14 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/03/27 21:10:19 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/06 23:23:55 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 #include <chrono>
 
 template <typename Cont>
-static void	printCont(Cont& container) {
+static void	printCont(Cont& container)
+{
 	if (container.empty()) return;
 
 	typename Cont::iterator	it;
@@ -24,7 +25,8 @@ static void	printCont(Cont& container) {
 	next = container.begin();
 	ite = container.end();
 	it = next++;
-	while (next != ite) {
+	while (next != ite)
+	{
 		std::cout << *it << ", ";
 		++it;
 		++next;
@@ -32,9 +34,12 @@ static void	printCont(Cont& container) {
 	std::cout << *it << std::endl;
 }
 
-static bool	onlyPositiveNumbers(char** args) {
-	for (std::size_t i = 0; args[i]; ++i) {
-		for (std::size_t j = 0; args[i][j]; ++j) {
+static bool	onlyPositiveNumbers(char** args)
+{
+	for (std::size_t i = 0; args[i]; ++i)
+	{
+		for (std::size_t j = 0; args[i][j]; ++j)
+		{
 			if (std::isspace(args[i][j]))
 				continue;
 			if (!std::isdigit(args[i][j]))
@@ -44,12 +49,15 @@ static bool	onlyPositiveNumbers(char** args) {
 	return (true);
 }
 
-int	main(int ac, char** av) {
-	if (ac < 2) {
+int	main(int ac, char** av)
+{
+	if (ac < 2)
+	{
 		std::cout << "PmergeMe: Usage: [positive numbers]" << std::endl;
 		return (EXIT_SUCCESS);
 	}
-	if (!onlyPositiveNumbers(&av[1])) {
+	if (!onlyPositiveNumbers(&av[1]))
+	{
 		std::cout << "Error" << std::endl;
 		return (EXIT_FAILURE);
 	}

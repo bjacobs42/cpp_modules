@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 02:28:51 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/06/27 20:31:22 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/06 23:25:33 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 #include <string>
 #include <stack>
 
-class RPN {
+class RPN
+{
 	private:
 		std::stack<double>	_stack;
 	
