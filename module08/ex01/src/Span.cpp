@@ -6,13 +6,14 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 07:30:29 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/07/06 22:34:34 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/08 01:16:48 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Span.hpp"
+#include "../include/Span.hpp"
 #include <algorithm>
-#include <ctime>
+#include <iterator>
+#include <numeric>
 
 Span::Span(void) : _maxSize(0)
 {}
@@ -42,8 +43,7 @@ void	Span::fill(void)
 {
 	std::srand(time(NULL));
 	size_t amount = _maxSize - _numbers.size();
-	while (amount--)
-		_numbers.push_back(rand());
+	std::generate_n(std::back_inserter(_numbers), amount, std::rand);
 }
 
 void	Span::fill(const unsigned int amount)
@@ -51,15 +51,13 @@ void	Span::fill(const unsigned int amount)
 	if (amount + _numbers.size() > _maxSize)
 		throw Span::SpanException("fill; amount is larger than max size");
 	std::srand(time(NULL));
-	while (_numbers.size() < amount)
-		_numbers.push_back(rand());
+	std::generate_n(std::back_inserter(_numbers), amount, std::rand);
 }
 void	Span::fill(const unsigned int amount, const int number)
 {
 	if (amount + _numbers.size() > _maxSize)
 		throw Span::SpanException("fill; amount is larger than max size");
-	for (size_t i = 0; i < amount; ++i)
-		_numbers.push_back(number);
+	std::fill_n(std::back_inserter(_numbers), amount, number);
 }
 
 void	Span::addNumber(const int& number) 
@@ -72,20 +70,16 @@ void	Span::addNumber(const int& number)
 int	Span::shortestSpan(void)
 {
 	std::vector<int>	sortedNumbers;
-	int					span, minSpan;
+	std::vector<int>	differences;
+	int					minSpan;
 
 	if (_numbers.size() < 2)
 		throw Span::SpanException("shortestSpan; insufficient elements");
 	sortedNumbers = _numbers;
+	differences.resize(sortedNumbers.size());
 	std::sort(sortedNumbers.begin(), sortedNumbers.end());
-	minSpan = sortedNumbers[1] - sortedNumbers[0];
-	for (size_t i = 2; i < _numbers.size(); ++i)
-	{
-		span = std::abs(sortedNumbers[i] - sortedNumbers[i-1]);
-		if (span == 0)
-			return (0);
-		minSpan = std::min(span, minSpan);
-	}
+	std::adjacent_difference(sortedNumbers.begin(), sortedNumbers.end(), differences.begin());
+	minSpan = *std::min_element(differences.begin() + 1, differences.end());
 	return (minSpan);
 }
 

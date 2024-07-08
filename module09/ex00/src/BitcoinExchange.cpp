@@ -6,14 +6,14 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 23:45:17 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/07/06 23:06:33 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/08 02:25:27 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/BitcoinExchange.hpp"
+#include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <cstdint>
 
 /****************************** [ Uility Functions ] ******************************/
 
@@ -39,11 +39,11 @@ static char	getSeparator(const std::string& buff)
 static bool	separateFormat(const std::string& buff, std::string& date,
 		float& value, const char separator, const unsigned int& lineIndex)
 {
-	size_t	found;
+	size_t	separatorPos;
 	int		i;
 
-	found = buff.find(separator);
-	if (found == std::string::npos)
+	separatorPos = buff.find(separator);
+	if (separatorPos == std::string::npos)
 	{
 		std::cout << "Error: invalid format at line " << lineIndex << std::endl;
 		return (false);
@@ -51,12 +51,12 @@ static bool	separateFormat(const std::string& buff, std::string& date,
 	i = 0;
 	while (std::isspace(date[i]))
 		++i;
-	date = buff.substr(i, found);
+	date = buff.substr(i, separatorPos);
 	while (std::isspace(date.back()))
 		date.pop_back();
 	try 
 	{
-		value = std::stof(buff.substr(found+1));
+		value = std::stof(buff.substr(separatorPos+1));
 	}
 	catch (std::out_of_range& e)
 	{
@@ -66,22 +66,23 @@ static bool	separateFormat(const std::string& buff, std::string& date,
 	return (true);
 }
 
+static bool	isDashOrDigit(const unsigned char c)
+{
+	return (std::isdigit(c) || c == '-');
+}
+
 static bool	validDate(const std::string& string)
 {
-	uint8_t	dashCount = 0;
+	std::string::const_iterator	it;
+	size_t						dashCount;
 
-	for (std::size_t i = 0; string[i]; ++i)
-	{
-		if (string[i] == '-')
-		{
-			++dashCount;
-			if (dashCount > 2)
-				return (false);
-		}
-		else if (!std::isdigit(string[i]))
-			return (false);
-	}
-	if (dashCount < 2)
+	if (string.size() > 10)
+		return (false);
+	it = std::find_if_not(string.begin(), string.end(), isDashOrDigit);
+	if (it != string.end())
+		return (false);
+	dashCount = std::count(string.begin(), string.end(), '-');
+	if (dashCount != 2)
 		return (false);
 	return (true);
 }
@@ -90,16 +91,15 @@ static bool	checkDate(std::string& date, const unsigned int& lineIndex)
 {
 	int						year, month, day;
 	int						maxDay;
-	std::size_t				found;
+	std::size_t				dashPos;
 
 	if (!validDate(date))
 	{
 		std::cout << "Error: invalid date(" << date << ") at line " << lineIndex << std::endl;
 		return (false);
 	}
-	year = std::stoi(date);
-	found = date.find('-');
-	month = std::stoi(&date[found+1]);
+	dashPos = date.find('-');
+	month = std::stoi(&date[dashPos+1]);
 	if (month < 1 || month > 12)
 	{
 		std::cout << "Error: invalid month(" << date << ") at line " << lineIndex << std::endl;
@@ -107,6 +107,7 @@ static bool	checkDate(std::string& date, const unsigned int& lineIndex)
 	}
 	if (month == 2)
 	{
+		year = std::stoi(date);
 		if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)
 			maxDay = 29;
 		else
@@ -116,8 +117,8 @@ static bool	checkDate(std::string& date, const unsigned int& lineIndex)
 		maxDay = 30;
 	else
 		maxDay = 31;
-	found = date.find('-', found+1);
-	day = std::stoi(&date[found+1]);
+	dashPos = date.find('-', dashPos+1);
+	day = std::stoi(&date[dashPos+1]);
 	if (day < 1 || day > maxDay)
 	{
 		std::cout << "Error: invalid day(" << date << ") at line " << lineIndex << std::endl;
@@ -178,7 +179,9 @@ BitcoinExchange::BitcoinExchange(void)
 	{
 		if (separateFormat(buff, date, value, separator, lineIndex)
 				&& checkDate(date, lineIndex))
+		{
 			insertData(_dataBase, date, value, lineIndex);
+		}
 		++lineIndex;
 	}
 }

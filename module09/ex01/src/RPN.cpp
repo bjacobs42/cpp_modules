@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 02:37:45 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/07/06 23:15:44 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/08 02:31:59 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ size_t	RPN::addNumber(const std::string& number)
 	uint8_t	dots = 0;
 	size_t	i;
 
-	for (i = 0;  number[i]; ++i) {
+	for (i = 0; number[i]; ++i)
+	{
 		if (std::isdigit(number[i]))
 			continue;
 		if (number[i] != '.')
@@ -70,7 +71,8 @@ void	RPN::executeOperation(const char& op)
 			_stack.top() -= returnPop(_stack);
 			break;
 		case '/':
-			if (_stack.top() == 0) {
+			if (_stack.top() == 0)
+			{
 				_stack.pop();
 				_stack.top() = std::numeric_limits<double>::infinity();
 			}
@@ -89,22 +91,22 @@ void	RPN::processArguments(const std::string& arg)
 	size_t	nread;
 
 	i = 0;
-	while (arg[i]) {
-		if (std::isspace(arg[i])) {
+	while (arg[i])
+	{
+		if (std::isspace(arg[i]))
 			++i;
-			continue;
-		}
-		if (std::isdigit(arg[i]) || arg[i] == '.') {
+		else if (std::isdigit(arg[i]) || arg[i] == '.')
+		{
 			nread = this->addNumber(&arg[i]);
 			i += nread;
-			continue;
 		}
-		if (std::strchr("+-/*", arg[i])) {
+		else if (std::strchr("+-/*", arg[i]))
+		{
 			this->executeOperation(arg[i]);
 			++i;
-			continue;
 		}
-		throw std::exception();
+		else
+			throw std::exception();
 	}
 }
 
