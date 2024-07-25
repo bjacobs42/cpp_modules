@@ -6,32 +6,39 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 23:26:14 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/07/06 23:23:55 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/25 19:48:45 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/PmergeMe.hpp"
 #include <chrono>
 
+#define MAX_NUM_PRINTS 10
+
 template <typename Cont>
 static void	printCont(Cont& container)
 {
 	if (container.empty()) return;
 
+	size_t					i;
 	typename Cont::iterator	it;
 	typename Cont::iterator	ite;
 	typename Cont::iterator	next;
 
-	next = container.begin();
+	i = 0;
+	it = container.begin();
 	ite = container.end();
-	it = next++;
-	while (next != ite)
+	while (it != ite && i < (size_t)MAX_NUM_PRINTS)
 	{
-		std::cout << *it << ", ";
+		if (i)
+			std::cout << ", ";
+		std::cout << *it;
 		++it;
-		++next;
+		++i;
 	}
-	std::cout << *it << std::endl;
+	if (it != ite)
+		std::cout << ", [...]";
+	std::cout << std::endl;
 }
 
 static bool	onlyPositiveNumbers(char** args)
@@ -70,7 +77,7 @@ int	main(int ac, char** av)
 		return (EXIT_FAILURE);
 	std::chrono::time_point	end = std::chrono::high_resolution_clock::now();
 
-	float	vTime = std::chrono::duration<float>(end - start).count();
+	float	vTime = std::chrono::duration<float>(end - start).count() * 1000.0f;
 	float	lTime;
 	std::cout << "before: ";
 	printCont(v);
