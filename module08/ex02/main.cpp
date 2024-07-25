@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 07:30:33 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/07/06 22:50:06 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/24 16:26:11 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,9 @@ int	main(void) {
 	ite = mstack2.end();
 	std::cout << "mstack2 elements after swap { ";
 	std::for_each(it, ite, printStack);
+	std::cout << "}" << std::endl;
+	std::cout << "mstack elements after swap { ";
+	std::for_each(mstack.begin(), mstack.end(), printStack);
 	std::cout << "}" << std::endl;
 
 	std::stack<int> s(mstack);
