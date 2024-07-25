@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 02:37:45 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/07/08 02:31:59 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/25 19:12:21 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ RPN&	RPN::operator=(const RPN& rightSide)
 size_t	RPN::addNumber(const std::string& number)
 {
 	uint8_t	dots = 0;
+	double	convertedNumber;
 	size_t	i;
 
 	for (i = 0; number[i]; ++i)
@@ -46,9 +47,12 @@ size_t	RPN::addNumber(const std::string& number)
 			break;
 		++dots;
 		if (dots > 1 || !number[i+1])
-			return (false);
+			throw std::exception();
 	}
-	_stack.push(std::stod(number));
+	convertedNumber = std::stod(number);
+	if (std::abs(convertedNumber) >= 10)
+		throw std::exception();
+	_stack.push(convertedNumber);
 	return (i);
 }
 
