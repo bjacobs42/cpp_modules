@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 23:45:17 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/07/08 02:25:27 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/25 18:46:53 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static bool	separateFormat(const std::string& buff, std::string& date,
 	}
 	catch (std::out_of_range& e)
 	{
-		std::cout << "Error: not a number; line " << lineIndex << std::endl;
+		std::cout << "Error: not a number at line " << lineIndex << std::endl;
 		return (false);
 	}
 	return (true);
@@ -200,21 +200,27 @@ BitcoinExchange&	BitcoinExchange::operator=(const BitcoinExchange& rightSide)
 	return (*this);
 }
 
-void	BitcoinExchange::readInput(const std::string& inputFile)
+bool				BitcoinExchange::operator!(void) const
 {
-	std::map<std::string, float>::iterator	it;
-	std::ifstream							input(inputFile);
-	std::string								buff, date;
-	float									value;
-	char									separator;
+	return (_dataBase.empty());
+}
 
+void	BitcoinExchange::readInput(const std::string& inputFile) const
+{
+	std::map<std::string, float>::const_iterator	it;
+	std::ifstream									input(inputFile);
+	std::string										buff, date;
+	float											value;
+	char											separator;
+
+	if (_dataBase.empty())
+		return;
+	std::cout << inputFile << ";" << std::endl;
 	if (!input)
 	{
 		std::cout << "Error: invalid input file" << std::endl;
 		return;
 	}
-	if (_dataBase.empty())
-		return;
 	std::getline(input, buff);
 	separator = getSeparator(buff);
 	if (separator == -1)
@@ -222,7 +228,6 @@ void	BitcoinExchange::readInput(const std::string& inputFile)
 		std::cout << "Error: invalid format template" << std::endl;
 		return;
 	}
-	std::cout << inputFile << ";" << std::endl;
 	unsigned int	lineIndex = 2;
 	while (std::getline(input, buff))
 	{

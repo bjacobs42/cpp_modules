@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 23:06:41 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/03/22 01:00:10 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/25 18:45:08 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ int	main(int ac, char **av)
 		return (EXIT_FAILURE);
 	}
 	BitcoinExchange	btc;
-	btc.readInput(av[1]);
+	if (!btc)
+		return (EXIT_FAILURE);
+	for (size_t i = 1; av[i]; ++i)
+		btc.readInput(av[i]);
 	return (EXIT_SUCCESS);
 }
