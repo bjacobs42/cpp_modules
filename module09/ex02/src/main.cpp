@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/26 23:26:14 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/07/25 19:48:45 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/07/26 15:53:24 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ static void	printCont(Cont& container)
 	size_t					i;
 	typename Cont::iterator	it;
 	typename Cont::iterator	ite;
-	typename Cont::iterator	next;
 
 	i = 0;
 	it = container.begin();
@@ -72,10 +71,12 @@ int	main(int ac, char** av)
 	std::vector<unsigned int>	v;
 	std::list<unsigned int>		l;
 
-	std::chrono::time_point	start = std::chrono::high_resolution_clock::now();
+	std::chrono::time_point<std::chrono::system_clock>	start =
+		std::chrono::high_resolution_clock::now();
 	if (!PmergeMe::initCont<std::vector<unsigned int>>(&av[1], v))
 		return (EXIT_FAILURE);
-	std::chrono::time_point	end = std::chrono::high_resolution_clock::now();
+	std::chrono::time_point<std::chrono::system_clock>	end =
+		std::chrono::high_resolution_clock::now();
 
 	float	vTime = std::chrono::duration<float>(end - start).count() * 1000.0f;
 	float	lTime;
