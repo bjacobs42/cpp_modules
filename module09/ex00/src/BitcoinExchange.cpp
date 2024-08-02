@@ -6,7 +6,7 @@
 /*   By: bjacobs <bjacobs@student.codam.nl>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 23:45:17 by bjacobs           #+#    #+#             */
-/*   Updated: 2024/07/25 21:50:50 by bjacobs          ###   ########.fr       */
+/*   Updated: 2024/08/02 18:13:57 by bjacobs          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ static char	getSeparator(const std::string& buff)
 	if (!buff[i])
 		return (-1);
 	separator = buff[i];
-	if (std::isspace(*(buff.end()-1)) || *(buff.end()-1) == separator)
+	while (std::isspace(buff[++i]));
+	if (!buff[i] || buff.find("|", i) != std::string::npos)
 		return (-1);
 	return (separator);
 }
@@ -43,7 +44,7 @@ static bool	separateFormat(const std::string& buff, std::string& date,
 	int		i;
 
 	separatorPos = buff.find(separator);
-	if (separatorPos == std::string::npos)
+	if (separatorPos == std::string::npos || buff.find(separator, separatorPos+1) != std::string::npos)
 	{
 		std::cout << "Error: invalid format at line " << lineIndex << std::endl;
 		return (false);
@@ -59,6 +60,11 @@ static bool	separateFormat(const std::string& buff, std::string& date,
 		value = std::stof(buff.substr(separatorPos+1));
 	}
 	catch (std::out_of_range& e)
+	{
+		std::cout << "Error: number out of range at line " << lineIndex << std::endl;
+		return (false);
+	}
+	catch (std::exception& e)
 	{
 		std::cout << "Error: not a number at line " << lineIndex << std::endl;
 		return (false);
@@ -177,7 +183,7 @@ BitcoinExchange::BitcoinExchange(void)
 	unsigned int	lineIndex = 2;
 	while (std::getline(dataBase, buff))
 	{
-		if (separateFormat(buff, date, value, separator, lineIndex)
+		if (!buff.empty() && separateFormat(buff, date, value, separator, lineIndex)
 				&& checkDate(date, lineIndex))
 		{
 			insertData(_dataBase, date, value, lineIndex);
@@ -191,7 +197,8 @@ BitcoinExchange::BitcoinExchange(const BitcoinExchange& source)
 	*this = source;
 }
 
-BitcoinExchange::~BitcoinExchange(void) {}
+BitcoinExchange::~BitcoinExchange(void)
+{}
 
 BitcoinExchange&	BitcoinExchange::operator=(const BitcoinExchange& rightSide)
 {
@@ -231,7 +238,7 @@ void	BitcoinExchange::readInput(const std::string& inputFile) const
 	unsigned int	lineIndex = 2;
 	while (std::getline(input, buff))
 	{
-		if (separateFormat(buff, date, value, separator, lineIndex)
+		if (!buff.empty() && separateFormat(buff, date, value, separator, lineIndex)
 				&& checkDate(date, lineIndex)
 				&& checkValue(value, lineIndex))
 		{
